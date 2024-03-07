@@ -19,7 +19,7 @@ cp_isvalid(Codepoint c)
 		return true;
 }
 
-size_t
+int
 cp_len(Codepoint c)
 {
 	if (!cp_isvalid(c))
