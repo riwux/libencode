@@ -6,10 +6,10 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-typedef uint_least32_t utf8;
+typedef uint_least32_t Codepoint;
 
-/* utf8.c */
-bool utf8_isvalid(utf8);
-size_t utf8_len(utf8);
+/* codepoint.c */
+bool cp_isvalid(Codepoint);
+size_t cp_len(Codepoint);
 
 #endif /* ENCODE_H_ */

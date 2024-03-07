@@ -4,7 +4,7 @@
 #include "encode.h"
 
 bool
-utf8_isvalid(utf8 c)
+cp_isvalid(Codepoint c)
 {
 	/* Range of noncharacters. */
 	if ((c >= 0xFDD0 && c <= 0xFDEF) || (c & 0xFFFE) == 0xFFFE)
@@ -20,9 +20,9 @@ utf8_isvalid(utf8 c)
 }
 
 size_t
-utf8_len(utf8 c)
+cp_len(Codepoint c)
 {
-	if (!utf8_isvalid(c))
+	if (!cp_isvalid(c))
 		return 0;
 	else if (c <= 0x7F)
 		return 1;
