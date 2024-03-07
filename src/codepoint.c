@@ -6,11 +6,8 @@
 bool
 cp_isvalid(Codepoint c)
 {
-	/* Range of noncharacters. */
-	if ((c >= 0xFDD0 && c <= 0xFDEF) || (c & 0xFFFE) == 0xFFFE)
-		return false;
 	/* Reserved for UTF-16 surrogate pairs. */
-	else if (c >= 0xD800 && c <=0xDFFF)
+	if (c >= 0xD800 && c <=0xDFFF)
 		return false;
 	/* Exceeds the (UTF-16) code point limit. */
 	else if (c > 0x10FFFF)

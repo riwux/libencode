@@ -12,8 +12,8 @@ extern "C" {
 typedef uint_least32_t Codepoint;
 
 /* codepoint.c */
-bool cp_isvalid(Codepoint);
-int cp_len(Codepoint);
+extern bool cp_isvalid(Codepoint);
+extern int  cp_len(Codepoint);
 
 #ifdef __cplusplus
 }
