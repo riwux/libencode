@@ -1,0 +1,10 @@
+ libencode
++----------+
+
+libencode provides interfaces to operate on plain unicode codepoints and UTF-8
+encoded strings.
+It doesn't provide any I/O functions, advanced buffering or other complicated
+features. libencode is meant to be used as a base for more sophisticated
+interfaces and programs. It conveniently handles the low-level encoding/decoding
+of data while the user builds upon that and focuses on the specific needs of the
+application in question.
