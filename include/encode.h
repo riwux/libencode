@@ -12,8 +12,8 @@ extern "C" {
 typedef uint_least32_t Codepoint;
 
 /* codepoint.c */
-extern bool encode_unicode_isvalid(Codepoint);
-extern int  encode_unicode_len(Codepoint);
+extern bool enc_unicode_isvalid(Codepoint);
+extern int  enc_unicode_len(Codepoint);
 
 #ifdef __cplusplus
 }
