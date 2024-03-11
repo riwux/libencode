@@ -4,7 +4,7 @@
 #include "encode.h"
 
 bool
-cp_isvalid(Codepoint c)
+encode_unicode_isvalid(Codepoint c)
 {
 	/* Reserved for UTF-16 surrogate pairs. */
 	if (c >= 0xD800 && c <=0xDFFF)
@@ -17,9 +17,9 @@ cp_isvalid(Codepoint c)
 }
 
 int
-cp_len(Codepoint c)
+encode_unicode_len(Codepoint c)
 {
-	if (!cp_isvalid(c))
+	if (!encode_unicode_isvalid(c))
 		return 0;
 	else if (c <= 0x7F)
 		return 1;

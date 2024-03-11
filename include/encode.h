@@ -4,7 +4,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif /* __cplusplus */
+#endif
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -12,11 +12,11 @@ extern "C" {
 typedef uint_least32_t Codepoint;
 
 /* codepoint.c */
-extern bool cp_isvalid(Codepoint);
-extern int  cp_len(Codepoint);
+extern bool encode_unicode_isvalid(Codepoint);
+extern int  encode_unicode_len(Codepoint);
 
 #ifdef __cplusplus
 }
-#endif /* __cplusplus */
+#endif
 
 #endif /* ENCODE_H_ */
