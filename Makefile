@@ -9,7 +9,7 @@ AR       = ar
 ARFLAGS  = rcs
 
 HDR  = encode.h
-SRC  = src/unicode.c src/utf8.c
+SRC  = src/utf8.c
 OBJ  = $(SRC:.c=.o)
 LIBA = libencode.a
 

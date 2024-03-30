@@ -12,13 +12,9 @@ extern "C" {
 
 typedef uint_least32_t Codepoint;
 
-/* codepoint.c */
-extern bool enc_unicode_isvalid(Codepoint);
-extern int  enc_unicode_len(Codepoint);
-
 /* utf8.c */
-extern bool      enc_utf8_isvalid(const char *);
-extern int       enc_utf8_len(const char *);
+extern bool enc_utf8_isvalid(Codepoint);
+extern int  enc_utf8_len(Codepoint);
 
 #ifdef __cplusplus
 }

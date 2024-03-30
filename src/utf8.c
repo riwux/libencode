@@ -5,32 +5,30 @@
 
 #include "encode.h"
 
-int
-enc_utf8_len(const char *c)
+bool
+enc_utf8_isvalid(Codepoint c)
 {
-	if ((*c & 0x80) == 0)
-		return 1;
-	else if ((*c & 0xE0) == 0xC0)
-		return 2;
-	else if ((*c & 0xF0) == 0xE0)
-		return 3;
-	else if ((*c & 0xF8) == 0xF0)
-		return 4;
+	/* Reserved for UTF-16 surrogate pairs. */
+	if (c >= 0xD800 && c <=0xDFFF)
+		return false;
+	/* Exceeds the (UTF-16) code point limit. */
+	else if (c > 0x10FFFF)
+		return false;
 	else
-		return 0;
+		return true;
 }
 
-bool
-enc_utf8_isvalid(const char *c)
+int
+enc_utf8_len(Codepoint c)
 {
-	int len;
-
-	if ((len = enc_utf8_len(c++)) == 0)
-		return false;
-
-	for (int i=0; i<len-1; ++i) {
-		if (!*c || (*c & 0xC0) != 0x80)
-			return false;
-	}
-	return true;
+	if (!enc_unicode_isvalid(c))
+		return 0;
+	else if (c <= 0x7F)
+		return 1;
+	else if (c <= 0x7FF)
+		return 2;
+	else if (c <= 0xFFFF)
+		return 3;
+	else
+		return 4;
 }
