@@ -21,7 +21,7 @@ enc_utf8_isvalid(Codepoint c)
 int
 enc_utf8_len(Codepoint c)
 {
-	if (!enc_unicode_isvalid(c))
+	if (!enc_utf8_isvalid(c))
 		return 0;
 	else if (c <= 0x7F)
 		return 1;
