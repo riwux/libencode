@@ -22,27 +22,22 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef ENCODE_H_
-#define ENCODE_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdbool.h>
-#include <stdint.h>
-#include <sys/types.h>
 
-typedef uint_least32_t Codepoint;
+#include "encode.h"
 
-/* codepoint.c */
-extern int codepoint_len(Codepoint);
-
-/* utf8.c */
-extern size_t utf8_encode(const Codepoint, char *, size_t);
-
-#ifdef __cplusplus
+int
+codepoint_len(Codepoint c)
+{
+	/* Reserved for UTF-16 surrogate pairs or exceeds codepoint limit. */
+	if ((c >= 0xD800 && c <= 0xDFFF) || c > 0x10FFFF)
+		return 0;
+	else if (c <= 0x7F)
+		return 1;
+	else if (c <= 0x7FF)
+		return 2;
+	else if (c <= 0xFFFF)
+		return 3;
+	else
+		return 4;
 }
-#endif
-
-#endif /* ENCODE_H_ */
