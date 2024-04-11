@@ -81,3 +81,40 @@ utf8_encode(Codepoint cp, char *utf, size_t n)
 		return 0;
 	}
 }
+
+size_t
+utf8_decode(const char *utf, Codepoint *cp)
+{
+	unsigned len = utf8_len(utf);
+
+	if (len == 0) {
+		*cp = CPINVAL;
+		return 3;
+	}
+
+	if (!cp)
+		return 0;
+
+	switch (len) {
+	case 1:
+		*cp = utf[0];
+		return 1;
+	case 2:
+		*cp  = (0x1F & utf[0]) << 6;
+		*cp |= (0x3F & utf[1]);
+		return 2;
+	case 3:
+		*cp  = (0x0F & utf[0]) << 12;
+		*cp |= (0x3F & utf[1]) << 6;
+		*cp |= (0x3F & utf[2]);
+		return 3;
+	case 4:
+		*cp  = (0x07 & utf[0]) << 18;
+		*cp |= (0x3F & utf[1]) << 12;
+		*cp |= (0x3F & utf[2]) << 6;
+		*cp |= (0x3F & utf[3]);
+		return 4;
+	default:
+		return 0;
+	}
+}
