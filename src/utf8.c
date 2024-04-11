@@ -30,6 +30,21 @@
 
 #define CPINVAL 0xFFFD
 
+int
+utf8_len(const char *utf)
+{
+	if ((*utf & 0x80) == 0)
+		return 1;
+	else if ((*utf & 0xE0) == 0xC0)
+		return 2;
+	else if ((*utf & 0xF0) == 0xE0)
+		return 3;
+	else if ((*utf & 0xF8) == 0xF0)
+		return 4;
+	else
+		return 0;
+}
+
 size_t
 utf8_encode(Codepoint cp, char *utf, size_t n)
 {
