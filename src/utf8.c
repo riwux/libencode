@@ -28,10 +28,17 @@
 
 #include "encode.h"
 
+#define CPINVAL 0xFFFD
+
 size_t
-utf8_encode(const Codepoint cp, char *utf, size_t n)
+utf8_encode(Codepoint cp, char *utf, size_t n)
 {
 	unsigned len = codepoint_len(cp);
+
+	if (len == 0) {
+		cp  = CPINVAL;
+		len = 3;
+	}
 
 	if (n == 0 || !utf || n < len)
 		return 0;
