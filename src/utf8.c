@@ -62,19 +62,19 @@ utf8_encode(Codepoint cp, char *utf, size_t n)
 		utf[0] = cp;
 		return 1;
 	case 2:
-		utf[0] = (uint_least8_t)(0xC0 | (cp >> 6));
-		utf[1] = (uint_least8_t)(0x80 | (0x3F & cp));
+		utf[0] = (0xC0 | (cp >> 6));
+		utf[1] = (0x80 | (0x3F & cp));
 		return 2;
 	case 3:
-		utf[0] = (uint_least8_t)(0xE0 | (cp >> 12));
-		utf[1] = (uint_least8_t)(0x80 | (0x3F & (cp >> 6)));
-		utf[2] = (uint_least8_t)(0x80 | (0x3F & cp));
+		utf[0] = (0xE0 | (cp >> 12));
+		utf[1] = (0x80 | (0x3F & (cp >> 6)));
+		utf[2] = (0x80 | (0x3F & cp));
 		return 3;
 	case 4:
-		utf[0] = (uint_least8_t)(0xF0 | (cp >> 18));
-		utf[1] = (uint_least8_t)(0x80 | (0x3F & (cp >> 12)));
-		utf[2] = (uint_least8_t)(0x80 | (0x3F & (cp >> 6)));
-		utf[3] = (uint_least8_t)(0x80 | (0x3F & cp));
+		utf[0] = (0xF0 | (cp >> 18));
+		utf[1] = (0x80 | (0x3F & (cp >> 12)));
+		utf[2] = (0x80 | (0x3F & (cp >> 6)));
+		utf[3] = (0x80 | (0x3F & cp));
 		return 4;
 	default:
 		return 0;
