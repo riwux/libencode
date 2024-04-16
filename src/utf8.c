@@ -29,9 +29,18 @@
 
 #define CPINVAL 0xFFFD
 
+/*
+ * Looks at the first byte of the UTF-8 encoded string 'utf' and
+ * calculates the amount of bytes (length) used to encode this first
+ * UTF-8 character. In case this byte isn't valid or 'utf' is NULL,
+ * zero is returned.
+ */
 int
 utf8_len(const char *utf)
 {
+	if (!utf)
+		return 0;
+
 	if ((*utf & 0x80) == 0)
 		return 1;
 	else if ((*utf & 0xE0) == 0xC0)
@@ -44,7 +53,14 @@ utf8_len(const char *utf)
 		return 0;
 }
 
-size_t
+/*
+ * Attempts to encode the codepoint 'cp' into a valid UTF-8 character
+ * and places it into the 'utf' buffer which has the size 'n'.
+ * In case the buffer is NULL or 'n' is too small to hold the encoding,
+ * zero is returned and the buffer is left untouched.
+ * Otherwise the amount of bytes used to encode 'cp' is returned.
+ */
+int
 utf8_encode(Codepoint cp, char *utf, size_t n)
 {
 	unsigned len = codepoint_len(cp);
@@ -54,7 +70,7 @@ utf8_encode(Codepoint cp, char *utf, size_t n)
 		len = 3;
 	}
 
-	if (n == 0 || !utf || n < len)
+	if (!utf || n < len)
 		return 0;
 
 	switch (len) {
@@ -81,18 +97,26 @@ utf8_encode(Codepoint cp, char *utf, size_t n)
 	}
 }
 
-size_t
-utf8_decode(const char *utf, Codepoint *cp)
+/*
+ * Attempts to decode the first UTF-8 character from the UTF-8 encoded
+ * string 'utf' with the size 'n'.
+ * The decoding process yields a codepoint which is returned to the
+ * user by placing it into 'cp'. In case 'cp' is NULL or 'n' indicates
+ * that the buffer doesn't contain a valid encoding, zero is returned.
+ * Otherwise the amount of bytes processed is returned.
+ */
+int
+utf8_decode(const char *utf, size_t n, Codepoint *cp)
 {
 	unsigned len = utf8_len(utf);
 
-	if (len == 0) {
-		*cp = CPINVAL;
-		return 3;
-	}
-
 	if (!cp)
 		return 0;
+
+	if (len == 0 || n < len) {
+		*cp = CPINVAL;
+		return 0;
+	}
 
 	switch (len) {
 	case 1:
