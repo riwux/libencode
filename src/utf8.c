@@ -88,33 +88,45 @@ utf8_decode(const char *utf, size_t n, Codepoint *cp)
 	if (!cp)
 		return 0;
 
-	if (len == 0 || n < len) {
-		*cp = CPINVAL;
+	*cp = CPINVAL;
+	if (!utf || n == 0)
 		return 0;
+	if (n < len)
+		return len;
+
+	/* Make sure the UTF-8 sequence has proper continuation bytes. */
+	for (unsigned i = 1; i < len; ++i) {
+		if ((utf[i] & 0xC0) != 0x80)
+			return i;
 	}
 
 	switch (len) {
 	case 1:
 		*cp = utf[0];
-		return 1;
+		break;
 	case 2:
 		*cp  = (0x1F & utf[0]) << 6;
 		*cp |= (0x3F & utf[1]);
-		return 2;
+		break;
 	case 3:
 		*cp  = (0x0F & utf[0]) << 12;
 		*cp |= (0x3F & utf[1]) << 6;
 		*cp |= (0x3F & utf[2]);
-		return 3;
+		break;
 	case 4:
 		*cp  = (0x07 & utf[0]) << 18;
 		*cp |= (0x3F & utf[1]) << 12;
 		*cp |= (0x3F & utf[2]) << 6;
 		*cp |= (0x3F & utf[3]);
-		return 4;
+		break;
 	default:
-		return 0;
+		/* First byte is invalid, but processed. */
+		return 1;
 	}
+
+	if ((unsigned)codepoint_len(*cp) != len)
+		*cp = CPINVAL;
+	return len;
 }
 
 /*
