@@ -30,31 +30,7 @@
 #define CPINVAL 0xFFFD
 
 /*
- * Looks at the first byte of the UTF-8 encoded string 'utf' and
- * calculates the amount of bytes (length) used to encode this first
- * UTF-8 character. In case this byte isn't valid or 'utf' is NULL,
- * zero is returned.
- */
-int
-utf8_len(const char *utf)
-{
-	if (!utf)
-		return 0;
-
-	if ((*utf & 0x80) == 0)
-		return 1;
-	else if ((*utf & 0xE0) == 0xC0)
-		return 2;
-	else if ((*utf & 0xF0) == 0xE0)
-		return 3;
-	else if ((*utf & 0xF8) == 0xF0)
-		return 4;
-	else
-		return 0;
-}
-
-/*
- * Attempts to encode the codepoint 'cp' into a valid UTF-8 character
+ * Attempts to encode the codepoint 'cp' into a valid UTF-8 sequence
  * and places it into the 'utf' buffer which has the size 'n'.
  * In case the buffer is NULL or 'n' is too small to hold the encoding,
  * zero is returned and the buffer is left untouched.
@@ -98,12 +74,11 @@ utf8_encode(Codepoint cp, char *utf, size_t n)
 }
 
 /*
- * Attempts to decode the first UTF-8 character from the UTF-8 encoded
- * string 'utf' with the size 'n'.
- * The decoding process yields a codepoint which is returned to the
- * user by placing it into 'cp'. In case 'cp' is NULL or 'n' indicates
- * that the buffer doesn't contain a valid encoding, zero is returned.
- * Otherwise the amount of bytes processed is returned.
+ * Attempts to decode the first UTF-8 encoded codepoint in the string 'utf'
+ * of size 'n'. The decoding process yields a single codepoint which is
+ * returned to the user by placing it into 'cp'. In case 'cp' is NULL or
+ * 'n' indicates that the buffer doesn't contain a valid encoding, zero is
+ * returned. Otherwise the amount of bytes processed is returned.
  */
 int
 utf8_decode(const char *utf, size_t n, Codepoint *cp)
@@ -140,4 +115,28 @@ utf8_decode(const char *utf, size_t n, Codepoint *cp)
 	default:
 		return 0;
 	}
+}
+
+/*
+ * Looks at the first byte of the UTF-8 encoded string 'utf' and
+ * calculates the amount of bytes (length) used to encode this first
+ * UTF-8 sequence. In case the byte isn't valid or 'utf' is NULL,
+ * zero is returned.
+ */
+int
+utf8_len(const char *utf)
+{
+	if (!utf)
+		return 0;
+
+	if ((*utf & 0x80) == 0)
+		return 1;
+	else if ((*utf & 0xE0) == 0xC0)
+		return 2;
+	else if ((*utf & 0xF0) == 0xE0)
+		return 3;
+	else if ((*utf & 0xF8) == 0xF0)
+		return 4;
+	else
+		return 0;
 }

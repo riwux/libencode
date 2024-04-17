@@ -29,7 +29,7 @@
 /*
  * Looks at the codepoint value of 'c' and checks if it's allowed
  * to be encoded into UTF-8. If so, it calculates the amount of bytes
- * needed to properly encode 'c' into a valid UTF-8 character.
+ * needed to properly encode 'c' into a valid UTF-8 sequence.
  */
 int
 codepoint_len(Codepoint c)

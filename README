@@ -8,3 +8,25 @@ features. libencode is meant to be used as a base for more sophisticated
 interfaces and programs. It conveniently handles the low-level encoding/decoding
 of data while the user builds upon that and focuses on the specific needs of the
 application in question.
+
+  Glossar
++---------+
+
+The following definitions attempt to explain the terms used troughout the
+project in an understandable way, while still reflecting the original meaning
+as specified by the Unicode Consortium.
+
+codespace         | A range of integers that is available to Unicode for
+                  |   encoding characters and spans from 0x0 to 0x10FFFF
+
+codepoint         | A number in the Unicode codespace (often assigned to an
+                  |   abstract character)
+
+grapheme          | The smallest unit of a writing system that carries meaning
+                  |   (i.e a character) and can consist of multiple codepoints
+
+grapheme cluster  | A sequence of one or more codepoints that represent what
+                  |   a user perceives as a character/grapheme
+
+UTF-8 sequence    | A series of bytes that represents a single codepoint
+                  |   converted to the UTF-8 encoding scheme
