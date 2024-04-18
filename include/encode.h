@@ -39,8 +39,8 @@ typedef uint_least32_t Codepoint;
 extern int codepoint_len(Codepoint);
 
 /* utf8.c */
-extern int    utf8_encode(Codepoint, char *, size_t);
-extern int    utf8_decode(const char *, size_t, Codepoint *);
+extern int    utf8_encode(char *, size_t, Codepoint);
+extern int    utf8_decode(Codepoint *, const char *, size_t);
 extern int    utf8_len(const char *);
 
 #ifdef __cplusplus

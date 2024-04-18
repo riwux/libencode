@@ -37,7 +37,7 @@
  * Otherwise the amount of bytes used to encode 'cp' is returned.
  */
 int
-utf8_encode(Codepoint cp, char *utf, size_t n)
+utf8_encode(char *utf, size_t n, Codepoint cp)
 {
 	unsigned len = codepoint_len(cp);
 
@@ -81,7 +81,7 @@ utf8_encode(Codepoint cp, char *utf, size_t n)
  * returned. Otherwise the amount of bytes processed is returned.
  */
 int
-utf8_decode(const char *utf, size_t n, Codepoint *cp)
+utf8_decode(Codepoint *cp, const char *utf, size_t n)
 {
 	unsigned i;
 	unsigned len = utf8_len(utf);
