@@ -83,6 +83,7 @@ utf8_encode(Codepoint cp, char *utf, size_t n)
 int
 utf8_decode(const char *utf, size_t n, Codepoint *cp)
 {
+	unsigned i;
 	unsigned len = utf8_len(utf);
 
 	if (!cp)
@@ -93,12 +94,12 @@ utf8_decode(const char *utf, size_t n, Codepoint *cp)
 		return 0;
 
 	/* Make sure the UTF-8 sequence has proper continuation bytes. */
-	for (unsigned i = 1; i < len; ++i) {
+	for (i = 1; i < n && i < len; ++i) {
 		if ((utf[i] & 0xC0) != 0x80)
 			return i;
 	}
 
-	switch (len) {
+	switch (i) {
 	case 1:
 		*cp = utf[0];
 		break;
@@ -122,8 +123,6 @@ utf8_decode(const char *utf, size_t n, Codepoint *cp)
 		return 1;
 	}
 
-	if (n < len)
-		return len;
 	if ((unsigned)codepoint_len(*cp) != len)
 		*cp = CPINVAL;
 	return len;
