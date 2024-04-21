@@ -2,7 +2,7 @@
 .SUFFIXES:
 
 # Semantic versioning: major.minor.patch
-VERSION = 0.1.0
+VERSION = 0.1.1
 
 PREFIX = /usr/local
 LIBDIR = $(PREFIX)/lib

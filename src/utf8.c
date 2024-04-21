@@ -88,8 +88,13 @@ utf8_decode(Codepoint *cp, const char *utf, size_t n)
 
 	if (!cp)
 		return 0;
-
 	*cp = CPINVAL;
+
+	/* Invalid leading byte. */
+	if (len == 0)
+		return 1;
+
+	/* Buffer is unusable. */
 	if (!utf || n == 0)
 		return 0;
 
@@ -119,10 +124,10 @@ utf8_decode(Codepoint *cp, const char *utf, size_t n)
 		*cp |= (0x3F & utf[3]);
 		break;
 	default:
-		/* First byte is invalid, but processed. */
 		return 1;
 	}
 
+	/* Overlong UTF-8 sequence. */
 	if ((unsigned)codepoint_len(*cp) != len)
 		*cp = CPINVAL;
 	return len;
