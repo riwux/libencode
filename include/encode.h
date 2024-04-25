@@ -40,8 +40,8 @@ extern int codepoint_len(Codepoint);
 
 /* utf8.c */
 extern int    utf8_encode(char *, size_t, Codepoint);
-extern int    utf8_decode(Codepoint *, const char *, size_t);
-extern int    utf8_len(const char *);
+extern int    utf8_decode(Codepoint *, char const *, size_t);
+extern int    utf8_len(char const *);
 
 #ifdef __cplusplus
 }

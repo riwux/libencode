@@ -81,7 +81,7 @@ utf8_encode(char *utf, size_t n, Codepoint cp)
  * returned. Otherwise the amount of bytes processed is returned.
  */
 int
-utf8_decode(Codepoint *cp, const char *utf, size_t n)
+utf8_decode(Codepoint *cp, char const *utf, size_t n)
 {
 	unsigned i;
 	unsigned len = utf8_len(utf);
@@ -140,7 +140,7 @@ utf8_decode(Codepoint *cp, const char *utf, size_t n)
  * zero is returned.
  */
 int
-utf8_len(const char *utf)
+utf8_len(char const *utf)
 {
 	if (!utf)
 		return 0;
