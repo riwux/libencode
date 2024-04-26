@@ -35,10 +35,11 @@ extern "C" {
 
 typedef uint_least32_t Codepoint;
 
-/* codepoint.c */
+
+/* Codepoint */
 extern int codepoint_len(Codepoint);
 
-/* utf8.c */
+/* UTF-8 */
 extern int    utf8_encode(char *, size_t, Codepoint);
 extern int    utf8_decode(Codepoint *, char const *, size_t);
 extern int    utf8_len(char const *);
