@@ -32,22 +32,26 @@
 /*
  * Attempts to encode the codepoint 'cp' into a valid UTF-8 sequence
  * and places it into the 'utf' buffer which has the size 'n'.
- * In case the buffer is NULL or 'n' is too small to hold the encoding,
- * zero is returned and the buffer is left untouched.
- * Otherwise the amount of bytes used to encode 'cp' is returned.
+ * The amount of bytes needed to encode 'cp' is returned even if the
+ * buffer is too small or invalid in some other way.
  */
 int
 utf8_encode(char *utf, size_t n, Codepoint cp)
 {
 	unsigned len = codepoint_len(cp);
 
+	/* Replace invalid codepoints. */
 	if (len == 0) {
 		cp  = CPINVAL;
 		len = 3;
 	}
 
+	/*
+	 * Always return the amount of bytes theoretically needed to properly
+	 * encode the codepoint, regardless of what state the buffer is in.
+	 */
 	if (!utf || n < len)
-		return 0;
+		return len;
 
 	switch (len) {
 	case 1:
