@@ -52,25 +52,26 @@ utf8_encode(char *utf, size_t n, Codepoint cp)
 	switch (len) {
 	case 1:
 		utf[0] = cp;
-		return 1;
+		break;
 	case 2:
 		utf[0] = (0xC0 | (cp >> 6));
 		utf[1] = (0x80 | (0x3F & cp));
-		return 2;
+		break;
 	case 3:
 		utf[0] = (0xE0 | (cp >> 12));
 		utf[1] = (0x80 | (0x3F & (cp >> 6)));
 		utf[2] = (0x80 | (0x3F & cp));
-		return 3;
+		break;
 	case 4:
 		utf[0] = (0xF0 | (cp >> 18));
 		utf[1] = (0x80 | (0x3F & (cp >> 12)));
 		utf[2] = (0x80 | (0x3F & (cp >> 6)));
 		utf[3] = (0x80 | (0x3F & cp));
-		return 4;
+		break;
 	default:
-		return 0;
+		break;
 	}
+	return len;
 }
 
 /*
@@ -83,28 +84,28 @@ utf8_encode(char *utf, size_t n, Codepoint cp)
 int
 utf8_decode(Codepoint *cp, char const *utf, size_t n)
 {
-	unsigned i;
+	unsigned processed;
 	unsigned len = utf8_len(utf);
 
 	if (!cp)
 		return 0;
 	*cp = CPINVAL;
 
-	/* Invalid leading byte. */
-	if (len == 0)
-		return 1;
-
 	/* Buffer is unusable. */
 	if (!utf || n == 0)
 		return 0;
 
+	/* Invalid leading byte. */
+	if (len == 0)
+		return 1;
+
 	/* Make sure the UTF-8 sequence has proper continuation bytes. */
-	for (i = 1; i < n && i < len; ++i) {
-		if ((utf[i] & 0xC0) != 0x80)
-			return i;
+	for (processed = 1; processed < n && processed < len; ++processed) {
+		if ((utf[processed] & 0xC0) != 0x80)
+			return processed;
 	}
 
-	switch (i) {
+	switch (processed) {
 	case 1:
 		*cp = utf[0];
 		break;
@@ -124,10 +125,10 @@ utf8_decode(Codepoint *cp, char const *utf, size_t n)
 		*cp |= (0x3F & utf[3]);
 		break;
 	default:
-		return 1;
+		break;
 	}
 
-	/* Overlong UTF-8 sequence. */
+	/* Overlong UTF-8 sequence or buffer is too small. */
 	if ((unsigned)codepoint_len(*cp) != len)
 		*cp = CPINVAL;
 	return len;
