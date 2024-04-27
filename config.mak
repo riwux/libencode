@@ -1,4 +1,6 @@
-# Semantic versioning: major.minor.patch
+# See LICENSE file for copyright and license details.
+
+# major.minor.patch
 VERSION = 0.1.1
 
 PREFIX = /usr/local
