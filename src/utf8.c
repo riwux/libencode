@@ -29,14 +29,8 @@
 
 #define CPINVAL 0xFFFD
 
-/*
- * Attempts to encode the codepoint 'cp' into a valid UTF-8 sequence
- * and places it into the 'utf' buffer which has the size 'n'.
- * The amount of bytes needed to encode 'cp' is returned even if the
- * buffer is too small or invalid in some other way.
- */
 int
-utf8_encode(char *utf, size_t n, Codepoint cp)
+utf8_encode(char *const utf, size_t const n, Codepoint cp)
 {
 	unsigned len = codepoint_len(cp);
 
@@ -78,18 +72,11 @@ utf8_encode(char *utf, size_t n, Codepoint cp)
 	return len;
 }
 
-/*
- * Attempts to decode the first UTF-8 encoded codepoint in the string 'utf'
- * of size 'n'. The decoding process yields a single codepoint which is
- * returned to the user by placing it into 'cp'. In case 'cp' is NULL or
- * 'n' indicates that the buffer doesn't contain a valid encoding, zero is
- * returned. Otherwise the amount of bytes processed is returned.
- */
 int
-utf8_decode(Codepoint *cp, char const *utf, size_t n)
+utf8_decode(Codepoint *cp, char const *const utf, size_t const n)
 {
 	unsigned processed;
-	unsigned len = utf8_len(utf);
+	unsigned const len = utf8_len(utf);
 
 	if (!cp)
 		return 0;
@@ -138,14 +125,8 @@ utf8_decode(Codepoint *cp, char const *utf, size_t n)
 	return len;
 }
 
-/*
- * Looks at the first byte of the UTF-8 encoded string 'utf' and
- * calculates the amount of bytes (length) used to encode this first
- * UTF-8 sequence. In case the byte isn't valid or 'utf' is NULL,
- * zero is returned.
- */
 int
-utf8_len(char const *utf)
+utf8_len(char const *const utf)
 {
 	if (!utf)
 		return 0;
