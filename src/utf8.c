@@ -27,8 +27,6 @@
 
 #include "encode.h"
 
-#define CPINVAL 0xFFFD
-
 int
 utf8_encode(char *const utf, size_t const n, Codepoint cp)
 {
@@ -36,10 +34,9 @@ utf8_encode(char *const utf, size_t const n, Codepoint cp)
 
 	/* Replace invalid codepoints. */
 	if (len == 0) {
-		cp  = CPINVAL;
+		cp  = CODEPOINT_INVAL;
 		len = 3;
 	}
-
 	/*
 	 * Always return the amount of bytes theoretically needed to properly
 	 * encode the codepoint, regardless of what state the buffer is in.
@@ -73,14 +70,14 @@ utf8_encode(char *const utf, size_t const n, Codepoint cp)
 }
 
 int
-utf8_decode(Codepoint *cp, char const *const utf, size_t const n)
+utf8_decode(Codepoint *const cp, char const *const utf, size_t const n)
 {
 	unsigned processed;
 	unsigned const len = utf8_len(utf);
 
 	if (!cp)
 		return 0;
-	*cp = CPINVAL;
+	*cp = CODEPOINT_INVAL;
 
 	/* Buffer is unusable. */
 	if (!utf || n == 0)
@@ -121,7 +118,7 @@ utf8_decode(Codepoint *cp, char const *const utf, size_t const n)
 
 	/* Overlong UTF-8 sequence or buffer is too small. */
 	if ((unsigned)codepoint_len(*cp) != len)
-		*cp = CPINVAL;
+		*cp = CODEPOINT_INVAL;
 	return len;
 }
 

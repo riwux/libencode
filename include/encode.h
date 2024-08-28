@@ -25,16 +25,17 @@
 #ifndef ENCODE_H_
 #define ENCODE_H_
 
+#define CODEPOINT_INVAL 0xFFFD
+
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif /* __cplusplus */
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <sys/types.h>
 
 typedef uint_least32_t Codepoint;
-
 
 /* Codepoint */
 extern int codepoint_len(Codepoint);
@@ -46,6 +47,6 @@ extern int    utf8_len(char const *);
 
 #ifdef __cplusplus
 }
-#endif
+#endif /* __cplusplus */
 
 #endif /* ENCODE_H_ */
