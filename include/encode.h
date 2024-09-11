@@ -43,7 +43,7 @@ extern int codepoint_len(Codepoint);
 /* UTF-8 */
 extern int    utf8_encode(char *, size_t, Codepoint);
 extern int    utf8_decode(Codepoint *, char const *, size_t);
-extern int    utf8_len(char const *);
+extern int    utf8_unit_count(char const *);
 
 #ifdef __cplusplus
 }

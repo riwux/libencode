@@ -73,7 +73,7 @@ int
 utf8_decode(Codepoint *const cp, char const *const utf, size_t const n)
 {
 	unsigned processed;
-	unsigned const len = utf8_len(utf);
+	unsigned const len = utf8_unit_count(utf);
 
 	if (!cp)
 		return 0;
@@ -123,7 +123,7 @@ utf8_decode(Codepoint *const cp, char const *const utf, size_t const n)
 }
 
 int
-utf8_len(char const *const utf)
+utf8_unit_count(char const *const utf)
 {
 	if (!utf)
 		return 0;
