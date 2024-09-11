@@ -30,7 +30,7 @@
 int
 utf8_encode(char *const utf, size_t const n, Codepoint cp)
 {
-	unsigned len = codepoint_len(cp);
+	unsigned len = utf8_cp_unit_count(cp);
 
 	/* Replace invalid codepoints. */
 	if (len == 0) {
@@ -117,7 +117,7 @@ utf8_decode(Codepoint *const cp, char const *const utf, size_t const n)
 	}
 
 	/* Overlong UTF-8 sequence or buffer is too small. */
-	if ((unsigned)codepoint_len(*cp) != len)
+	if ((unsigned)utf8_cp_unit_count(*cp) != len)
 		*cp = CODEPOINT_INVAL;
 	return len;
 }
