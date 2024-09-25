@@ -29,9 +29,9 @@
 #include "encode.h"
 
 int
-utf8_encode(char *const u8str, size_t const n, Codepoint cp)
+ncd_utf8_encode(char *const u8str, size_t const n, Codepoint cp)
 {
-	uint_least8_t len = utf8_cp_unit_count(cp);
+	uint_least8_t len = ncd_codepoint_unit_count(cp);
 
 	/* Replace invalid codepoints. */
 	if (len == 0) {
@@ -72,10 +72,10 @@ utf8_encode(char *const u8str, size_t const n, Codepoint cp)
 }
 
 int
-utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
+ncd_utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 {
 	uint_least8_t processed;
-	uint_least8_t const len = utf8_unit_count(u8str);
+	uint_least8_t const len = ncd_utf8_unit_count(u8str);
 
 	if (!cp)
 		return 0;
@@ -119,14 +119,14 @@ utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 	}
 
 	/* Catch overlong UTF-8 sequences. */
-	if ((uint_least8_t)utf8_cp_unit_count(*cp) != len)
+	if ((uint_least8_t)ncd_codepoint_unit_count(*cp) != len)
 		*cp = CODEPOINT_INVAL;
 
 	return len;
 }
 
 int
-utf8_unit_count(char const *const u8str)
+ncd_utf8_unit_count(char const *const u8str)
 {
 	if (!u8str)
 		return 0;

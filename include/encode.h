@@ -39,12 +39,12 @@ extern "C" {
 typedef uint_least32_t Codepoint;
 
 /* Codepoint */
-extern int utf8_cp_unit_count(Codepoint);
+extern int ncd_codepoint_unit_count(Codepoint);
 
 /* UTF-8 */
-extern int    utf8_encode(char *, size_t, Codepoint);
-extern int    utf8_decode(Codepoint *, char const *, size_t);
-extern int    utf8_unit_count(char const *);
+extern int    ncd_utf8_encode(char *, size_t, Codepoint);
+extern int    ncd_utf8_decode(Codepoint *, char const *, size_t);
+extern int    ncd_utf8_unit_count(char const *);
 
 #ifdef __cplusplus
 }

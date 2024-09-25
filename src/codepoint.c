@@ -28,7 +28,7 @@
 #include "encode.h"
 
 int
-utf8_cp_unit_count(Codepoint const c)
+ncd_codepoint_unit_count(Codepoint const c)
 {
 	/* Reserved for UTF-16 surrogate pairs or exceeds codepoint limit. */
 	if ((c >= 0xD800 && c <= 0xDFFF) || c > 0x10FFFF)
