@@ -142,3 +142,22 @@ ncd_utf8_unit_count(char const *const u8str)
 	else
 		return 0;
 }
+
+bool
+ncd_utf8_isvalid(char const *const u8str, size_t const n)
+{
+	uint_least8_t units;
+
+	if (!u8str || n == 0)
+		return false;
+
+	for (size_t base = 0; base < n; base += units) {
+		units = ncd_utf8_unit_count(u8str + base);
+		for (uint_least8_t i = 1; i < units; ++i) {
+			if ((base + i == n) || (u8str[base + i] & 0xC0) != 0x80)
+				return false;
+		}
+	}
+
+	return true;
+}
