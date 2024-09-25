@@ -90,8 +90,8 @@ utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 		return 1;
 
 	/* Make sure the UTF-8 sequence has proper continuation bytes. */
-	for (processed = 1; processed < n && processed < len; ++processed) {
-		if ((u8str[processed] & 0xC0) != 0x80)
+	for (processed = 1; processed < len; ++processed) {
+		if ((processed == n) || (u8str[processed] & 0xC0) != 0x80)
 			return processed;
 	}
 
@@ -118,7 +118,7 @@ utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 		break;
 	}
 
-	/* Overlong UTF-8 sequence or buffer is too small. */
+	/* Catch overlong UTF-8 sequences. */
 	if ((uint_least8_t)utf8_cp_unit_count(*cp) != len)
 		*cp = CODEPOINT_INVAL;
 
