@@ -26,26 +26,24 @@
 #ifndef ENCODE_H_
 #define ENCODE_H_
 
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
 #define CODEPOINT_INVAL 0xFFFD
+
+typedef uint_least32_t Codepoint;
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <sys/types.h>
-
-typedef uint_least32_t Codepoint;
-
-/* Codepoint */
-extern int ncd_codepoint_unit_count(Codepoint);
-
-/* UTF-8 */
 extern int    ncd_utf8_encode(char *, size_t, Codepoint);
 extern int    ncd_utf8_decode(Codepoint *, char const *, size_t);
 extern int    ncd_utf8_unit_count(char const *);
 extern bool   ncd_utf8_isvalid(char const *, size_t);
+
+extern int    ncd_codepoint_unit_count(Codepoint);
 
 #ifdef __cplusplus
 }
