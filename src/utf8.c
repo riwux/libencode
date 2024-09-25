@@ -29,9 +29,9 @@
 #include "encode.h"
 
 int
-utf8_encode(char *const utf, size_t const n, Codepoint cp)
+utf8_encode(char *const u8str, size_t const n, Codepoint cp)
 {
-	unsigned len = utf8_cp_unit_count(cp);
+	uint_least8_t len = utf8_cp_unit_count(cp);
 
 	/* Replace invalid codepoints. */
 	if (len == 0) {
@@ -42,46 +42,47 @@ utf8_encode(char *const utf, size_t const n, Codepoint cp)
 	 * Always return the amount of bytes theoretically needed to properly
 	 * encode the codepoint, regardless of what state the buffer is in.
 	 */
-	if (!utf || n < len)
+	if (!u8str || n < len)
 		return len;
 
 	switch (len) {
 	case 1:
-		utf[0] = cp;
+		u8str[0] = cp;
 		break;
 	case 2:
-		utf[0] = (0xC0 | (cp >> 6));
-		utf[1] = (0x80 | (0x3F & cp));
+		u8str[0] = (0xC0 | (cp >> 6));
+		u8str[1] = (0x80 | (0x3F & cp));
 		break;
 	case 3:
-		utf[0] = (0xE0 | (cp >> 12));
-		utf[1] = (0x80 | (0x3F & (cp >> 6)));
-		utf[2] = (0x80 | (0x3F & cp));
+		u8str[0] = (0xE0 | (cp >> 12));
+		u8str[1] = (0x80 | (0x3F & (cp >> 6)));
+		u8str[2] = (0x80 | (0x3F & cp));
 		break;
 	case 4:
-		utf[0] = (0xF0 | (cp >> 18));
-		utf[1] = (0x80 | (0x3F & (cp >> 12)));
-		utf[2] = (0x80 | (0x3F & (cp >> 6)));
-		utf[3] = (0x80 | (0x3F & cp));
+		u8str[0] = (0xF0 | (cp >> 18));
+		u8str[1] = (0x80 | (0x3F & (cp >> 12)));
+		u8str[2] = (0x80 | (0x3F & (cp >> 6)));
+		u8str[3] = (0x80 | (0x3F & cp));
 		break;
 	default:
 		break;
 	}
+
 	return len;
 }
 
 int
-utf8_decode(Codepoint *const cp, char const *const utf, size_t const n)
+utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 {
-	unsigned processed;
-	unsigned const len = utf8_unit_count(utf);
+	uint_least8_t processed;
+	uint_least8_t const len = utf8_unit_count(u8str);
 
 	if (!cp)
 		return 0;
 	*cp = CODEPOINT_INVAL;
 
 	/* Buffer is unusable. */
-	if (!utf || n == 0)
+	if (!u8str || n == 0)
 		return 0;
 
 	/* Invalid leading byte. */
@@ -90,52 +91,53 @@ utf8_decode(Codepoint *const cp, char const *const utf, size_t const n)
 
 	/* Make sure the UTF-8 sequence has proper continuation bytes. */
 	for (processed = 1; processed < n && processed < len; ++processed) {
-		if ((utf[processed] & 0xC0) != 0x80)
+		if ((u8str[processed] & 0xC0) != 0x80)
 			return processed;
 	}
 
 	switch (processed) {
 	case 1:
-		*cp = utf[0];
+		*cp = u8str[0];
 		break;
 	case 2:
-		*cp  = (0x1F & utf[0]) << 6;
-		*cp |= (0x3F & utf[1]);
+		*cp  = (0x1F & u8str[0]) << 6;
+		*cp |= (0x3F & u8str[1]);
 		break;
 	case 3:
-		*cp  = (0x0F & utf[0]) << 12;
-		*cp |= (0x3F & utf[1]) << 6;
-		*cp |= (0x3F & utf[2]);
+		*cp  = (0x0F & u8str[0]) << 12;
+		*cp |= (0x3F & u8str[1]) << 6;
+		*cp |= (0x3F & u8str[2]);
 		break;
 	case 4:
-		*cp  = (0x07 & utf[0]) << 18;
-		*cp |= (0x3F & utf[1]) << 12;
-		*cp |= (0x3F & utf[2]) << 6;
-		*cp |= (0x3F & utf[3]);
+		*cp  = (0x07 & u8str[0]) << 18;
+		*cp |= (0x3F & u8str[1]) << 12;
+		*cp |= (0x3F & u8str[2]) << 6;
+		*cp |= (0x3F & u8str[3]);
 		break;
 	default:
 		break;
 	}
 
 	/* Overlong UTF-8 sequence or buffer is too small. */
-	if ((unsigned)utf8_cp_unit_count(*cp) != len)
+	if ((uint_least8_t)utf8_cp_unit_count(*cp) != len)
 		*cp = CODEPOINT_INVAL;
+
 	return len;
 }
 
 int
-utf8_unit_count(char const *const utf)
+utf8_unit_count(char const *const u8str)
 {
-	if (!utf)
+	if (!u8str)
 		return 0;
 
-	if ((*utf & 0x80) == 0)
+	if ((u8str[0] & 0x80) == 0)
 		return 1;
-	else if ((*utf & 0xE0) == 0xC0)
+	else if ((u8str[0] & 0xE0) == 0xC0)
 		return 2;
-	else if ((*utf & 0xF0) == 0xE0)
+	else if ((u8str[0] & 0xF0) == 0xE0)
 		return 3;
-	else if ((*utf & 0xF8) == 0xF0)
+	else if ((u8str[0] & 0xF8) == 0xF0)
 		return 4;
 	else
 		return 0;
