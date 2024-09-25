@@ -9,24 +9,38 @@ interfaces and programs. It conveniently handles the low-level encoding/decoding
 of data while the user builds upon that and focuses on the specific needs of the
 application in question.
 
-  Glossar
-+---------+
+  Glossary
++----------+
 
 The following definitions attempt to explain the terms used troughout the
 project in an understandable way, while still reflecting the original meaning
 as specified by the Unicode Consortium.
 
-codespace         | A range of integers that is available to Unicode for
-                  |   encoding characters and spans from 0x0 to 0x10FFFF
 
-codepoint         | A number in the Unicode codespace (often assigned to an
-                  |   abstract character)
+codespace         | The range of integers available for encoding characters.
+                  |   It spans from 0x0 to 0x10FFFF.
+
+codepoint         | A number in the Unicode codespace that is assigned to an
+                  |   abstract character or another part of a writing system.
 
 grapheme          | The smallest unit of a writing system that carries meaning
-                  |   (i.e a character) and can consist of multiple codepoints
+                  |   (what a human perceives as a character) and is also called
+                  |   a 'user-perceived character'.
 
-grapheme cluster  | A sequence of one or more codepoints that represent what
-                  |   a user perceives as a character/grapheme
+grapheme cluster  | A sequence of one or more codepoints that represent a grapheme.
+                  |   This is what you want "character" to mean if you operate on text.
 
-UTF-8 sequence    | A series of bytes that represents a single codepoint
-                  |   converted to the UTF-8 encoding scheme
+character         | A character is *NOT* a 7-bit ASCII value.
+                  |   The word 'character' is a synonym for 'user-perceived character'
+                  |   but since it's common for people to think a character is an
+                  |   ASCII value and a byte in size, the term 'grapheme' was
+                  |   introduced and is preferred to avoid ambiguity.
+
+UTF-8 sequence    | A series of code units (bytes in this case) that represent a single
+                  |   codepoint encoded in the UTF-8 encoding scheme.
+
+code unit         | Code units (or simply 'unit') are the building blocks out of which
+                  |   a valid encoding is made. In the case of UTF-8 each unit is 8-bit
+                  |   (hence the eight) in size. Chained together, they form the
+                  |   UTF-8 sequence denoting an encoded codepoint.
+
