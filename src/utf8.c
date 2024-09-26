@@ -35,7 +35,7 @@ ncd_utf8_encode(char *const u8str, size_t const n, Codepoint cp)
 
 	/* Replace invalid codepoints. */
 	if (len == 0) {
-		cp  = CODEPOINT_INVAL;
+		cp  = NCD_REPLACEMENT_CODEPOINT;
 		len = 3;
 	}
 	/*
@@ -79,7 +79,7 @@ ncd_utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 
 	if (!cp)
 		return 0;
-	*cp = CODEPOINT_INVAL;
+	*cp = NCD_REPLACEMENT_CODEPOINT;
 
 	/* Buffer is unusable. */
 	if (!u8str || n == 0)
@@ -120,7 +120,7 @@ ncd_utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 
 	/* Catch overlong UTF-8 sequences. */
 	if ((uint_least8_t)ncd_codepoint_unit_count(*cp) != len)
-		*cp = CODEPOINT_INVAL;
+		*cp = NCD_REPLACEMENT_CODEPOINT;
 
 	return len;
 }

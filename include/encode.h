@@ -30,7 +30,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define CODEPOINT_INVAL 0xFFFD
+#define NCD_REPLACEMENT_CODEPOINT 0xFFFD
 
 typedef uint_least32_t Codepoint;
 
