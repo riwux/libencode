@@ -163,10 +163,10 @@ size_t
 ncd_utf8_validate(char const *const u8str, size_t const n, bool *const valid)
 {
 	size_t off = 0;
-	*valid = false;
 
-	if (!u8str || n == 0)
+	if (!u8str || n == 0 || !valid)
 		return 0;
+	*valid = false;
 
 	for (uint_least8_t units = 0; off < n; off += units) {
 		if ((units = ncd_utf8_unit_count(u8str + off)) == 0)
