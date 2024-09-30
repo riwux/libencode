@@ -160,13 +160,13 @@ ncd_utf8_isvalid(char const *const u8str, size_t const n)
 }
 
 size_t
-ncd_utf8_validate(char const *const u8str, size_t const n, bool *const valid)
+ncd_utf8_validate(char const *const u8str, size_t const n, bool *const ok)
 {
 	size_t off = 0;
 
-	if (!u8str || n == 0 || !valid)
+	if (!u8str || n == 0 || !ok)
 		return 0;
-	*valid = false;
+	*ok = false;
 
 	for (uint_least8_t units = 0; off < n; off += units) {
 		if ((units = ncd_utf8_unit_count(u8str + off)) == 0)
@@ -177,6 +177,6 @@ ncd_utf8_validate(char const *const u8str, size_t const n, bool *const valid)
 		}
 	}
 
-	*valid = true;
+	*ok = true;
 	return off;
 }
