@@ -42,6 +42,7 @@ extern int    ncd_utf8_encode(char *, size_t, Codepoint);
 extern int    ncd_utf8_decode(Codepoint *, char const *, size_t);
 extern int    ncd_utf8_unit_count(char const *);
 extern bool   ncd_utf8_isvalid(char const *, size_t);
+extern size_t ncd_utf8_validate(char const *, size_t);
 
 extern int    ncd_codepoint_unit_count(Codepoint);
 

@@ -146,19 +146,35 @@ ncd_utf8_unit_count(char const *const u8str)
 bool
 ncd_utf8_isvalid(char const *const u8str, size_t const n)
 {
-	uint_least8_t units;
+	uint_least8_t const units = ncd_utf8_unit_count(u8str);
 
-	if (!u8str || n == 0)
+	if (units == 0 || n == 0)
 		return false;
 
-	for (size_t base = 0; base < n; base += units) {
-		if ((units = ncd_utf8_unit_count(u8str + base)) == 0)
+	for (uint_least8_t i = 1; i < units; ++i) {
+		if ((i == n) || (u8str[i] & 0xC0) != 0x80)
 			return false;
-		for (uint_least8_t i = 1; i < units; ++i) {
-			if ((base + i == n) || (u8str[base + i] & 0xC0) != 0x80)
-				return false;
-		}
 	}
 
 	return true;
+}
+
+size_t
+ncd_utf8_validate(char const *const u8str, size_t const n)
+{
+	size_t off = 0;
+
+	if (!u8str || n == 0)
+		return 0;
+
+	for (uint_least8_t units = 0; off < n; off += units) {
+		if ((units = ncd_utf8_unit_count(u8str + off)) == 0)
+			return off + 1;
+		for (uint_least8_t i = 1; i < units; ++i) {
+			if ((off + i == n) || (u8str[off + i] & 0xC0) != 0x80)
+				return off + i;
+		}
+	}
+
+	return off;
 }
