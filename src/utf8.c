@@ -160,9 +160,10 @@ ncd_utf8_isvalid(char const *const u8str, size_t const n)
 }
 
 size_t
-ncd_utf8_validate(char const *const u8str, size_t const n)
+ncd_utf8_validate(char const *const u8str, size_t const n, bool *const valid)
 {
 	size_t off = 0;
+	*valid = false;
 
 	if (!u8str || n == 0)
 		return 0;
@@ -176,5 +177,6 @@ ncd_utf8_validate(char const *const u8str, size_t const n)
 		}
 	}
 
+	*valid = true;
 	return off;
 }
