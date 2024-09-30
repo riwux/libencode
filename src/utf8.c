@@ -75,7 +75,7 @@ int
 ncd_utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 {
 	uint_least8_t processed;
-	uint_least8_t const len = ncd_utf8_unit_count(u8str);
+	uint_least8_t const len = ncd_utf8_unit_count(u8str[0]);
 
 	if (!cp)
 		return 0;
@@ -126,12 +126,12 @@ ncd_utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 }
 
 int
-ncd_utf8_unit_count(char const *const u8str)
+ncd_utf8_unit_count(char const lead)
 {
 	if (!u8str)
 		return 0;
 
-	if ((u8str[0] & 0x80) == 0)
+	if ((lead & 0x80) == 0)
 		return 1;
 	else if ((u8str[0] & 0xE0) == 0xC0)
 		return 2;
@@ -159,24 +159,21 @@ ncd_utf8_isvalid(char const *const u8str, size_t const n)
 	return true;
 }
 
-size_t
-ncd_utf8_validate(char const *const u8str, size_t const n, bool *const ok)
+bool
+ncd_utf8_validate(size_t *const offset, char const *const u8str, size_t const n)
 {
-	size_t off = 0;
+	if (!u8str || n == 0 || !offset)
+		return false;
+	*offset = 0; /* Make sure there is no junk left. */
 
-	if (!u8str || n == 0 || !ok)
-		return 0;
-	*ok = false;
-
-	for (uint_least8_t units = 0; off < n; off += units) {
-		if ((units = ncd_utf8_unit_count(u8str + off)) == 0)
-			return off + 1;
+	for (uint_least8_t units = 0; *offset < n; *offset += units) {
+		if ((units = ncd_utf8_unit_count(u8str[*offset])) == 0)
+			return !(*offset + 1);
 		for (uint_least8_t i = 1; i < units; ++i) {
-			if ((off + i == n) || (u8str[off + i] & 0xC0) != 0x80)
-				return off + i;
+			if ((*offset + i == n) || (u8str[*offset + i] & 0xC0) != 0x80)
+				return !(*offset + i);
 		}
 	}
 
-	*ok = true;
-	return off;
+	return !(*offset);
 }
