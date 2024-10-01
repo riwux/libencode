@@ -72,7 +72,8 @@ ncd_utf8_encode(char *const u8str, size_t const n, Codepoint cp)
 }
 
 int
-ncd_utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
+ncd_utf8_decode(Codepoint *const restrict cp, char const *const restrict u8str,
+    size_t const n)
 {
 	uint_least8_t processed;
 	uint_least8_t const len = ncd_utf8_unit_count(u8str);
@@ -153,7 +154,8 @@ ncd_utf8_isvalid(char const *const u8str, size_t const n)
 }
 
 bool
-ncd_utf8_validate(size_t *const offset, char const *const u8str, size_t const n)
+ncd_utf8_validate(size_t *const restrict offset,
+     char const *const restrict u8str, size_t const n)
 {
 	if (!u8str || n == 0 || !offset)
 		return false;
