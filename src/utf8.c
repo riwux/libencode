@@ -88,6 +88,7 @@ ncd_utf8_decode(Codepoint *const restrict cp, char const *const restrict u8str,
 
 	/* Invalid leading byte. */
 	if (len == 0)
+		return 1;
 
 	/* Invalid continuation byte. */
 	if (!ncd_utf8_validate(&processed, u8str, len))
