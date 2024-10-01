@@ -86,6 +86,10 @@ ncd_utf8_decode(Codepoint *const restrict cp, char const *const restrict u8str,
 	if (!u8str || n == 0)
 		return 0;
 
+	/* Invalid leading byte. */
+	if (len == 0)
+
+	/* Invalid continuation byte. */
 	if (!ncd_utf8_validate(&processed, u8str, len))
 		return processed;
 
@@ -157,9 +161,12 @@ bool
 ncd_utf8_validate(size_t *const restrict offset,
      char const *const restrict u8str, size_t const n)
 {
-	if (!u8str || n == 0 || !offset)
+	if (!offset)
 		return false;
 	*offset = 0; /* Make sure there is no junk left. */
+
+	if (!u8str || n == 0)
+		return false;
 
 	for (uint_least8_t units = 0; *offset < n; *offset += units) {
 		if ((units = ncd_utf8_unit_count(u8str + *offset)) == 0)
