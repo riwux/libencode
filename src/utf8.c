@@ -85,11 +85,6 @@ ncd_utf8_decode(Codepoint *const cp, char const *const u8str, size_t const n)
 	if (!u8str || n == 0)
 		return 0;
 
-	/* Invalid leading byte. */
-	if (len == 0)
-		return 1;
-
-	/* Make sure the UTF-8 sequence has proper continuation bytes. */
 	if (!ncd_utf8_validate(&processed, u8str, len))
 		return processed;
 
