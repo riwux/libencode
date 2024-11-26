@@ -26,7 +26,6 @@
 #ifndef ENCODE_H_
 #define ENCODE_H_
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -41,8 +40,7 @@ extern "C" {
 extern int    ncd_utf8_encode(char *, size_t, Codepoint);
 extern int    ncd_utf8_decode(Codepoint *restrict, char const *restrict, size_t);
 extern int    ncd_utf8_unit_count(char const *);
-extern bool   ncd_utf8_isvalid(char const *, size_t);
-extern bool   ncd_utf8_validate(size_t *restrict, char const *restrict, size_t);
+extern int    ncd_utf8_validate(char const *, size_t);
 
 extern int    ncd_codepoint_unit_count(Codepoint);
 
