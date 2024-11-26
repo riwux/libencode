@@ -1,7 +1,7 @@
 # See LICENSE file for copyright and license details.
 
 # major.minor.patch
-VERSION = 0.2.0
+VERSION = 0.3.0
 
 PREFIX = /usr/local
 LIBDIR = $(PREFIX)/lib
