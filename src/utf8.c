@@ -23,7 +23,6 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <stdbool.h>
 #include <stddef.h>
 
 #include "encode.h"
@@ -75,8 +74,8 @@ int
 ncd_utf8_decode(Codepoint *const restrict cp, char const *const restrict buf,
     size_t const n)
 {
-	size_t processed;
-	uint_least8_t const units = ncd_utf8_unit_count(u8str);
+	int processed;
+	uint_least8_t const units = ncd_utf8_unit_count(buf);
 
 	if (!cp)
 		return 0;
@@ -91,10 +90,10 @@ ncd_utf8_decode(Codepoint *const restrict cp, char const *const restrict buf,
 		return 1;
 
 	/* Invalid continuation byte. */
-	if (!ncd_utf8_validate(&processed, buf, units))
+	if ((processed = ncd_utf8_validate(buf, n)) != 0)
 		return processed;
 
-	switch (processed) {
+	switch (units) {
 	case 1:
 		*cp = buf[0];
 		break;
@@ -142,41 +141,18 @@ ncd_utf8_unit_count(char const *const buf)
 		return 0;
 }
 
-bool
-ncd_utf8_isvalid(char const *const u8str, size_t const n)
+int
+ncd_utf8_validate(char const *const buf, size_t const n)
 {
-	uint_least8_t const units = ncd_utf8_unit_count(u8str);
+	uint_least8_t const units = ncd_utf8_unit_count(buf);
 
-	if (units == 0 || n == 0)
-		return false;
+	if (units == 0 || n == 0 || !buf)
+		return 1;
 
 	for (uint_least8_t i = 1; i < units; ++i) {
-		if ((i == n) || (u8str[i] & 0xC0) != 0x80)
-			return false;
+		if ((i == n) || (buf[i] & 0xC0) != 0x80)
+			return i + 1;
 	}
 
-	return true;
-}
-
-bool
-ncd_utf8_validate(size_t *const restrict offset,
-     char const *const restrict u8str, size_t const n)
-{
-	if (!offset)
-		return false;
-	*offset = 0; /* Make sure there is no junk left. */
-
-	if (!u8str || n == 0)
-		return false;
-
-	for (uint_least8_t units = 0; *offset < n; *offset += units) {
-		if ((units = ncd_utf8_unit_count(u8str + *offset)) == 0)
-			return !(*offset += 1);
-		for (uint_least8_t i = 1; i < units; ++i) {
-			if ((*offset + i == n) || (u8str[*offset + i] & 0xC0) != 0x80)
-				return !(*offset += i);
-		}
-	}
-
-	return true;
+	return 0;
 }
