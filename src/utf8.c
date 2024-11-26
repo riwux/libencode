@@ -29,114 +29,114 @@
 #include "encode.h"
 
 int
-ncd_utf8_encode(char *const u8str, size_t const n, Codepoint cp)
+ncd_utf8_encode(char *const buf, size_t const n, Codepoint cp)
 {
-	uint_least8_t len = ncd_codepoint_unit_count(cp);
+	uint_least8_t units = ncd_codepoint_unit_count(cp);
 
 	/* Replace invalid codepoints. */
-	if (len == 0) {
+	if (units == 0) {
 		cp  = NCD_REPLACEMENT_CODEPOINT;
-		len = 3;
+		units = 3;
 	}
 	/*
 	 * Always return the amount of bytes theoretically needed to properly
 	 * encode the codepoint, regardless of what state the buffer is in.
 	 */
-	if (!u8str || n < len)
-		return len;
+	if (!buf || n < units)
+		return units;
 
-	switch (len) {
+	switch (units) {
 	case 1:
-		u8str[0] = cp;
+		buf[0] = cp;
 		break;
 	case 2:
-		u8str[0] = (0xC0 | (cp >> 6));
-		u8str[1] = (0x80 | (0x3F & cp));
+		buf[0] = (0xC0 | (cp >> 6));
+		buf[1] = (0x80 | (0x3F & cp));
 		break;
 	case 3:
-		u8str[0] = (0xE0 | (cp >> 12));
-		u8str[1] = (0x80 | (0x3F & (cp >> 6)));
-		u8str[2] = (0x80 | (0x3F & cp));
+		buf[0] = (0xE0 | (cp >> 12));
+		buf[1] = (0x80 | (0x3F & (cp >> 6)));
+		buf[2] = (0x80 | (0x3F & cp));
 		break;
 	case 4:
-		u8str[0] = (0xF0 | (cp >> 18));
-		u8str[1] = (0x80 | (0x3F & (cp >> 12)));
-		u8str[2] = (0x80 | (0x3F & (cp >> 6)));
-		u8str[3] = (0x80 | (0x3F & cp));
+		buf[0] = (0xF0 | (cp >> 18));
+		buf[1] = (0x80 | (0x3F & (cp >> 12)));
+		buf[2] = (0x80 | (0x3F & (cp >> 6)));
+		buf[3] = (0x80 | (0x3F & cp));
 		break;
 	default:
 		break;
 	}
 
-	return len;
+	return units;
 }
 
 int
-ncd_utf8_decode(Codepoint *const restrict cp, char const *const restrict u8str,
+ncd_utf8_decode(Codepoint *const restrict cp, char const *const restrict buf,
     size_t const n)
 {
 	size_t processed;
-	uint_least8_t const len = ncd_utf8_unit_count(u8str);
+	uint_least8_t const units = ncd_utf8_unit_count(u8str);
 
 	if (!cp)
 		return 0;
 	*cp = NCD_REPLACEMENT_CODEPOINT;
 
 	/* Buffer is unusable. */
-	if (!u8str || n == 0)
+	if (!buf || n == 0)
 		return 0;
 
 	/* Invalid leading byte. */
-	if (len == 0)
+	if (units == 0)
 		return 1;
 
 	/* Invalid continuation byte. */
-	if (!ncd_utf8_validate(&processed, u8str, len))
+	if (!ncd_utf8_validate(&processed, buf, units))
 		return processed;
 
 	switch (processed) {
 	case 1:
-		*cp = u8str[0];
+		*cp = buf[0];
 		break;
 	case 2:
-		*cp  = (0x1F & u8str[0]) << 6;
-		*cp |= (0x3F & u8str[1]);
+		*cp  = (0x1F & buf[0]) << 6;
+		*cp |= (0x3F & buf[1]);
 		break;
 	case 3:
-		*cp  = (0x0F & u8str[0]) << 12;
-		*cp |= (0x3F & u8str[1]) << 6;
-		*cp |= (0x3F & u8str[2]);
+		*cp  = (0x0F & buf[0]) << 12;
+		*cp |= (0x3F & buf[1]) << 6;
+		*cp |= (0x3F & buf[2]);
 		break;
 	case 4:
-		*cp  = (0x07 & u8str[0]) << 18;
-		*cp |= (0x3F & u8str[1]) << 12;
-		*cp |= (0x3F & u8str[2]) << 6;
-		*cp |= (0x3F & u8str[3]);
+		*cp  = (0x07 & buf[0]) << 18;
+		*cp |= (0x3F & buf[1]) << 12;
+		*cp |= (0x3F & buf[2]) << 6;
+		*cp |= (0x3F & buf[3]);
 		break;
 	default:
 		break;
 	}
 
 	/* Catch overlong UTF-8 sequences. */
-	if ((uint_least8_t)ncd_codepoint_unit_count(*cp) != len)
+	if ((uint_least8_t)ncd_codepoint_unit_count(*cp) != units)
 		*cp = NCD_REPLACEMENT_CODEPOINT;
 
-	return len;
+	return units;
 }
 
 int
-ncd_utf8_unit_count(char const *const u8str)
+ncd_utf8_unit_count(char const *const buf)
 {
-	if (!u8str)
+	if (!buf)
 		return 0;
 
-	if ((u8str[0] & 0x80) == 0)
+	if ((buf[0] & 0x80) == 0)
 		return 1;
-	else if ((u8str[0] & 0xE0) == 0xC0)
+	else if ((buf[0] & 0xE0) == 0xC0)
 		return 2;
-	else if ((u8str[0] & 0xF0) == 0xE0)
+	else if ((buf[0] & 0xF0) == 0xE0)
 		return 3;
-	else if ((u8str[0] & 0xF8) == 0xF0)
+	else if ((buf[0] & 0xF8) == 0xF0)
 		return 4;
 	else
 		return 0;
