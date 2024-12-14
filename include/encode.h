@@ -31,18 +31,16 @@
 
 #define NCD_REPLACEMENT_CODEPOINT 0xFFFD
 
-typedef uint_least32_t Codepoint;
-
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-extern int    ncd_utf8_encode(char *, size_t, Codepoint);
-extern int    ncd_utf8_decode(Codepoint *restrict, char const *restrict, size_t);
+extern int    ncd_utf8_encode(char *, size_t, uint_least32_t);
+extern int    ncd_utf8_decode(uint_least32_t *restrict, char const *restrict, size_t);
 extern int    ncd_utf8_unit_count(char const *);
 extern int    ncd_utf8_validate(char const *, size_t);
 
-extern int    ncd_codepoint_unit_count(Codepoint);
+extern int    ncd_codepoint_unit_count(uint_least32_t);
 
 #ifdef __cplusplus
 }

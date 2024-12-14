@@ -28,7 +28,7 @@
 #include "encode.h"
 
 int
-ncd_utf8_encode(char *const buf, size_t const n, Codepoint cp)
+ncd_utf8_encode(char *const buf, size_t const n, uint_least32_t cp)
 {
 	uint_least8_t units = ncd_codepoint_unit_count(cp);
 
@@ -71,8 +71,8 @@ ncd_utf8_encode(char *const buf, size_t const n, Codepoint cp)
 }
 
 int
-ncd_utf8_decode(Codepoint *const restrict cp, char const *const restrict buf,
-    size_t const n)
+ncd_utf8_decode(uint_least32_t *const restrict cp,
+    char const *const restrict buf, size_t const n)
 {
 	int processed;
 	uint_least8_t const units = ncd_utf8_unit_count(buf);

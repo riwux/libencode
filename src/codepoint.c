@@ -26,16 +26,16 @@
 #include "encode.h"
 
 int
-ncd_codepoint_unit_count(Codepoint const c)
+ncd_codepoint_unit_count(uint_least32_t const cp)
 {
 	/* Reserved for UTF-16 surrogate pairs or exceeds codepoint limit. */
-	if ((c >= 0xD800 && c <= 0xDFFF) || c > 0x10FFFF)
+	if ((cp >= 0xD800 && cp <= 0xDFFF) || cp > 0x10FFFF)
 		return 0;
-	else if (c <= 0x7F)
+	else if (cp <= 0x7F)
 		return 1;
-	else if (c <= 0x7FF)
+	else if (cp <= 0x7FF)
 		return 2;
-	else if (c <= 0xFFFF)
+	else if (cp <= 0xFFFF)
 		return 3;
 	else
 		return 4;
